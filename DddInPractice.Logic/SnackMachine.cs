@@ -5,12 +5,12 @@ using static DddInPractice.Logic.Money;
 
 namespace DddInPractice.Logic
 {
-    public sealed class SnackMachine : Entity
+    public class SnackMachine : Entity
     {
-        public Money MoneyInside { get; private set; } = None;
-        public Money MoneyInTransaction { get; private set; } = None;
+        public virtual Money MoneyInside { get; protected set; } = None;
+        public virtual Money MoneyInTransaction { get; protected set; } = None;
 
-        public void InsertMoney(Money money)
+        public virtual void InsertMoney(Money money)
         {
             Money[] coinsAndNotes =
             {
@@ -22,12 +22,14 @@ namespace DddInPractice.Logic
             MoneyInTransaction += money;
         }
 
-        public void ReturnMoney()
+        public virtual Money ReturnMoney()
         {
+            Money money = MoneyInTransaction;
             MoneyInTransaction = None;
+            return money;
         }
 
-        public void BuySnack()
+        public virtual void BuySnack()
         {
             MoneyInside += MoneyInTransaction;
             MoneyInTransaction = None;

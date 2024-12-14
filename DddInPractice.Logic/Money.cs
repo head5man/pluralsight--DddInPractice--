@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace DddInPractice.Logic
 {
@@ -19,6 +20,16 @@ namespace DddInPractice.Logic
         public int FiveDollarCount { get; }
         public int TwentyDollarCount { get; }
 
+        public string Unit => Amount <= 0 ? string.Empty : Amount < 1 ? "¢" : "$";
+
+        public string UnitAmount => Amount <= 0 ? string.Empty : Amount < 1 ? AmountInCents.ToString() : Amount.ToString("0.00");
+
+        public int AmountInCents =>
+            OneDollarCount * 100 +
+            FiveDollarCount * 500 +
+            TwentyDollarCount * 2000 +
+            OneCentCount + TenCentCount * 10 + QuarterCount * 25;
+
         public decimal Amount =>
             OneCentCount * 0.01m +
             TenCentCount * 0.10m +
@@ -27,6 +38,8 @@ namespace DddInPractice.Logic
             FiveDollarCount * 5 +
             TwentyDollarCount * 20;
 
+        private Money() { }
+
         public Money(
             int oneCentCount,
             int tenCentCount,
@@ -34,6 +47,7 @@ namespace DddInPractice.Logic
             int oneDollarCount,
             int fiveDollarCount,
             int twentyDollarCount)
+            : this()
         {
             if (oneCentCount < 0)
                 throw new InvalidOperationException();
@@ -78,6 +92,11 @@ namespace DddInPractice.Logic
                 money1.OneDollarCount - money2.OneDollarCount,
                 money1.FiveDollarCount - money2.FiveDollarCount,
                 money1.TwentyDollarCount - money2.TwentyDollarCount);
+        }
+
+        public override string ToString()
+        {
+            return Amount == 0 ? null : $"{Unit}{UnitAmount}";
         }
 
         protected override bool EqualsCore(Money other)

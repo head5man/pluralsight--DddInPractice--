@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+*.ncrunchproject
+*.ncrunchsolution
+/DddInPractice.UI/Properties/Resources.Designer.cs
+/DddInPractice.UI/Properties/Settings.Designer.cs
