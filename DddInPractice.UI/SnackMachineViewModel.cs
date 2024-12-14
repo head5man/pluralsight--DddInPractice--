@@ -22,7 +22,7 @@ namespace DddInPractice.UI
             InsertFiveDollarCommand = new Command(() => InsertMoney(Money.FiveDollar));
             InsertTwentyDollarCommand = new Command(() => InsertMoney(Money.TwentyDollar));
             ReturnMoneyCommand = new Command(() => ReturnMoney());
-            BuySnackCommand = new Command(() => BuySnack());
+            BuySnackCommand = new Command(() => BuySnack(1));
         }
 
         public override string Caption => "Snack Machine";
@@ -55,7 +55,7 @@ namespace DddInPractice.UI
             NotifyClient($"You have inserted: {c}");
         }
 
-        private void BuySnack()
+        private void BuySnack(int position)
         {
             if (MoneyInTransaction == Money.None)
             {
@@ -63,7 +63,7 @@ namespace DddInPractice.UI
                 return;
             }
 
-            _snackMachine.BuySnack();
+            _snackMachine.BuySnack(position);
             Notify(nameof(MoneyInside));
             NotifyClient($"Bought a snack");
             SaveSnackMachine();
