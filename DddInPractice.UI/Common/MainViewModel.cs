@@ -8,7 +8,7 @@ namespace DddInPractice.UI.Common
         {
             SnackMachine sm;
             sm = GetSnackMachine();
-
+            
             var viewModel = new SnackMachineViewModel(sm);
             _dialogService.ShowDialog(viewModel);
         }
@@ -20,6 +20,7 @@ namespace DddInPractice.UI.Common
             {
                 sm = session.Get<SnackMachine>(1L);
             }
+            sm.LoadSnacks(1, new SnackPile(new Snack("some snack"), 1, 1m));
             return sm;
         }
     }

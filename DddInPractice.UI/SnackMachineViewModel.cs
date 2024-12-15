@@ -62,6 +62,11 @@ namespace DddInPractice.UI
                 NotifyClient("No money inserted");
                 return;
             }
+            if (_snackMachine.CanBuySnack(position, MoneyInTransaction, out var reason) is false)
+            {
+                NotifyClient(reason);
+                return;
+            }
 
             _snackMachine.BuySnack(position);
             Notify(nameof(MoneyInside));

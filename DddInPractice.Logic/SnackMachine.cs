@@ -56,6 +56,29 @@ namespace DddInPractice.Logic
             }
         }
 
+        public virtual bool CanBuySnack(int position, Money money, out string reason)
+        {
+            reason = string.Empty;
+            var slot = GetSlot(position);
+            if (slot is null)
+            {
+                reason = "Invalid slot position";
+                return false;
+            }
+            if (slot.SnackPile.Quantity == 0)
+            {
+                reason = "Slot empty";
+                return false;
+            }
+            if (money is null || slot.SnackPile.Price > money.Amount)
+            {
+                reason = "Not enough money";
+                return false;
+            }
+
+            return true;
+        }
+
         public virtual void LoadSnacks(int position, SnackPile snackPile)
         {
             Slot slot = GetSlot(position);
