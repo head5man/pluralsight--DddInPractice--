@@ -8,7 +8,7 @@ using static DddInPractice.Logic.Money;
 
 namespace DddInPractice.Logic
 {
-    public class SnackMachine : Entity
+    public class SnackMachine : AggregateRoot
     {
         public SnackMachine()
         {
@@ -16,15 +16,15 @@ namespace DddInPractice.Logic
             MoneyInTransaction = None;
             Slots = new List<Slot>
             {
-                new Slot(this, 1, null, 0, 0m),
-                new Slot(this, 2, null, 0, 0m),
-                new Slot(this, 3, null, 0, 0m)
+                new Slot(this, 1),
+                new Slot(this, 2),
+                new Slot(this, 3)
             };
         }
 
         public virtual Money MoneyInside { get; protected set; }
         public virtual Money MoneyInTransaction { get; protected set; }
-        public virtual IList<Slot> Slots { get; protected set; }
+        protected virtual IList<Slot> Slots { get; set; }
 
         public virtual void InsertMoney(Money money)
         {
@@ -47,21 +47,30 @@ namespace DddInPractice.Logic
 
         public virtual void BuySnack(int position)
         {
-            Slot slot = Slots.Single(p => p.Position == position);
-            if (slot.Quantity > 0 && slot.Price <= MoneyInTransaction.Amount)
+            Slot slot = GetSlot(position);
+            if (slot.SnackPile.Quantity > 0 && slot.SnackPile.Price <= MoneyInTransaction.Amount)
             {
-                slot.Quantity--;
+                slot.SnackPile = slot.SnackPile.SubtractOne();
                 MoneyInside += MoneyInTransaction;
                 MoneyInTransaction = None;
             }
         }
 
-        public virtual void LoadSnacks(int position, Snack snack, int quantity, decimal price)
+        public virtual void LoadSnacks(int position, SnackPile snackPile)
         {
-            Slot slot = Slots.Single(s => s.Position == position);
-            slot.Snack = snack;
-            slot.Quantity = quantity;
-            slot.Price = price;
+            Slot slot = GetSlot(position);
+            slot.SnackPile = snackPile;
+        }
+
+        public virtual SnackPile GetSnackPile(int position)
+        {
+            Slot slot = GetSlot(position);
+            return slot.SnackPile;
+        }
+
+        private Slot GetSlot(int position) 
+        {
+            return Slots.Single(s => s.Position == position);
         }
     }
 }

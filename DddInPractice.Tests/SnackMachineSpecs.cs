@@ -49,16 +49,14 @@ namespace DddInPractice.Tests
         public void BuySnack_trades_inserted_money_for_a_snack()
         {
             var snackMachine = new SnackMachine();
-            snackMachine.LoadSnacks(1, new Snack("Some snack"), 10, 1m);
+            snackMachine.LoadSnacks(1, new SnackPile(new Snack("Some snack"), 10, 1m));
             snackMachine.InsertMoney(Dollar);
             
             snackMachine.BuySnack(1);
 
             snackMachine.MoneyInTransaction.Should().Be(None);
             snackMachine.MoneyInside.Amount.Should().Be(1m);
-            snackMachine.Slots.Single(x => x.Position == 1).Quantity.Should().Be(9);
+            snackMachine.GetSnackPile(1).Quantity.Should().Be(9);
         }
-
-
     }
 }
