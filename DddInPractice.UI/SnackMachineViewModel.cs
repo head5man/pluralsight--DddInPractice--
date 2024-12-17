@@ -1,5 +1,6 @@
 ﻿using DddInPractice.Logic;
 using DddInPractice.UI.Common;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -27,7 +28,7 @@ namespace DddInPractice.UI
 
         public override string Caption => "Snack Machine";
 
-        public Money MoneyInTransaction => _snackMachine.MoneyInTransaction;
+        public decimal MoneyInTransaction => _snackMachine.MoneyInTransaction;
 
         public string Message { get => _message; set => SetProperty(ref _message, value); }
 
@@ -53,30 +54,25 @@ namespace DddInPractice.UI
         {
             _snackMachine.InsertMoney(c);
             NotifyClient($"You have inserted: {c}");
+            SaveSnackMachine();
         }
 
         private void BuySnack(int position)
         {
-            if (MoneyInTransaction == Money.None)
-            {
-                NotifyClient("No money inserted");
-                return;
-            }
-            if (_snackMachine.CanBuySnack(position, MoneyInTransaction, out var reason) is false)
+            if (_snackMachine.CanBuySnack(position, out var change, out var reason) is false)
             {
                 NotifyClient(reason);
                 return;
             }
 
             _snackMachine.BuySnack(position);
-            Notify(nameof(MoneyInside));
-            NotifyClient($"Bought a snack");
+            NotifyClient($"Bought a snack{(change != Money.None ? $"{Environment.NewLine}Returned {change}" : string.Empty)}");
             SaveSnackMachine();
         }
 
         private void ReturnMoney()
         {
-            if (MoneyInTransaction == Money.None)
+            if (MoneyInTransaction <= 0)
             {
                 NotifyClient("No money inserted");
                 return;
@@ -84,11 +80,13 @@ namespace DddInPractice.UI
 
             var returned = _snackMachine.ReturnMoney();
             NotifyClient($"Money returned: {returned}");
+            SaveSnackMachine();
         }
 
         private void NotifyClient(string message)
         {
             Notify(nameof(MoneyInTransaction));
+            Notify(nameof(MoneyInside));
             Message = message;
         }
 

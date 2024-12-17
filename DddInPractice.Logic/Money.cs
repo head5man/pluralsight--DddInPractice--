@@ -1,5 +1,8 @@
-﻿using System;
+﻿using FluentNHibernate.Conventions;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace DddInPractice.Logic
 {
@@ -41,12 +44,12 @@ namespace DddInPractice.Logic
         private Money() { }
 
         public Money(
-            int oneCentCount,
-            int tenCentCount,
-            int quarterCount,
-            int oneDollarCount,
-            int fiveDollarCount,
-            int twentyDollarCount)
+            int oneCentCount = 0,
+            int tenCentCount = 0,
+            int quarterCount = 0,
+            int oneDollarCount = 0,
+            int fiveDollarCount = 0,
+            int twentyDollarCount = 0)
             : this()
         {
             if (oneCentCount < 0)
@@ -79,6 +82,19 @@ namespace DddInPractice.Logic
                 money1.OneDollarCount + money2.OneDollarCount,
                 money1.FiveDollarCount + money2.FiveDollarCount,
                 money1.TwentyDollarCount + money2.TwentyDollarCount);
+
+            return sum;
+        }
+
+        public static Money operator *(Money money1, int multiplier)
+        {
+            Money sum = new Money(
+                money1.OneCentCount * multiplier,
+                money1.TenCentCount * multiplier,
+                money1.QuarterCount * multiplier,
+                money1.OneDollarCount * multiplier,
+                money1.FiveDollarCount * multiplier,
+                money1.TwentyDollarCount * multiplier);
 
             return sum;
         }
@@ -121,6 +137,123 @@ namespace DddInPractice.Logic
                 hashCode = (hashCode * 397) ^ TwentyDollarCount;
                 return hashCode;
             }
+        }
+
+        public Money Allocate(decimal allocate, Money money = null, int iteration = 0)
+        {
+            var amount = allocate;
+            List<Money> iterations = null;
+            if (money == null) 
+            {
+                money = Money.None;
+                iterations = new List<Money>();
+            }
+            
+            while (iteration <= 5 && allocate > 0)
+            {
+                switch (iteration)
+                {
+                    case 0:
+                        if (TrySubAllocate(ref money, amount, iteration, TwentyDollar, TwentyDollarCount))
+                        {
+                            amount -= money.Amount;
+                            break;
+                        }
+                        iteration++;
+                        goto case 1;
+                    case 1:
+                        if (TrySubAllocate(ref money, amount, iteration, FiveDollar, FiveDollarCount))
+                        {
+                            amount -= money.Amount;
+                            break;
+                        }
+                        iteration++;
+                        goto case 2;
+                    case 2:
+                        if (TrySubAllocate(ref money, amount, iteration, Dollar, OneDollarCount))
+                        {
+                            amount -= money.Amount;
+                            break;
+                        }
+                        iteration++;
+                        goto case 3;
+                    case 3:
+                        if (TrySubAllocate(ref money, amount, iteration, Quarter, QuarterCount))
+                        {
+                            amount -= money.Amount;
+                            break;
+                        }
+                        iteration++;
+                        goto case 4;
+                    case 4:
+                        if (TrySubAllocate(ref money, amount, iteration, TenCent, TenCentCount))
+                        {
+                            amount -= money.Amount;
+                            break;
+                        }
+                        iteration++;
+                        goto case 5;
+                    case 5:
+                        if (TrySubAllocate(ref money, amount, iteration, Cent, OneCentCount))
+                        {
+                            amount -= money.Amount;
+                        }
+                        break;
+                    default:
+                        throw new Exception();
+                }
+
+                if (iterations is null)
+                {
+                    if (amount == 0)
+                    {
+                        allocate = 0;
+                    }
+                    return money;
+                }
+                else
+                {
+                    iterations?.Add(money);
+                    if (amount == 0)
+                    {
+                        break;
+                    }
+                    amount = allocate;
+                    iteration++;
+                    money = Money.None;
+                }
+            }
+
+            return iterations is null || iterations.IsEmpty() ?
+                money :
+                iterations.OrderByDescending(m => m.Amount).First();
+        }
+
+        private bool TrySubAllocate(ref Money money, decimal amountDue, int iteration, Money moneyKind, int moneyKindMax)
+        {
+            var subMoney = SubIteration(amountDue, iteration, moneyKind, moneyKindMax);
+            if (subMoney != None)
+            {
+                money = subMoney;
+                return true;
+            }
+            return false;
+        }
+
+        private Money SubIteration(decimal amount, int iteration, Money moneyKind, int max)
+        {
+            var count = Math.Min((int)(amount / moneyKind.Amount), max);
+            for (int i = count; i > 0; i--)
+            {
+                Money money = moneyKind * i;
+                var remaining = amount - money.Amount;
+                money += Allocate(remaining, None, iteration + 1);
+                if (money.Amount == amount)
+                {
+                    return money;
+                }
+            }
+            return Money.None;
         }
     }
 }

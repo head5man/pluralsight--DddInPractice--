@@ -13,7 +13,7 @@ namespace DddInPractice.Logic
         public SnackMachine()
         {
             MoneyInside = None;
-            MoneyInTransaction = None;
+            MoneyInTransaction = 0;
             Slots = new List<Slot>
             {
                 new Slot(this, 1),
@@ -23,7 +23,7 @@ namespace DddInPractice.Logic
         }
 
         public virtual Money MoneyInside { get; protected set; }
-        public virtual Money MoneyInTransaction { get; protected set; }
+        public virtual decimal MoneyInTransaction { get; protected set; }
         protected virtual IList<Slot> Slots { get; set; }
 
         public virtual void InsertMoney(Money money)
@@ -35,30 +35,36 @@ namespace DddInPractice.Logic
             if (!coinsAndNotes.Contains(money))
                 throw new InvalidOperationException();
 
-            MoneyInTransaction += money;
+            MoneyInside += money;
+            MoneyInTransaction += money.Amount;
         }
 
         public virtual Money ReturnMoney()
         {
-            Money money = MoneyInTransaction;
-            MoneyInTransaction = None;
+            Money money = MoneyInside.Allocate(MoneyInTransaction);
+            MoneyInTransaction -= money.Amount;
+            MoneyInside -= money;
             return money;
         }
 
-        public virtual void BuySnack(int position)
+        public virtual Money BuySnack(int position)
         {
-            Slot slot = GetSlot(position);
-            if (slot.SnackPile.Quantity > 0 && slot.SnackPile.Price <= MoneyInTransaction.Amount)
+            if (CanBuySnack(position, out Money change, out string reason) is false)
             {
-                slot.SnackPile = slot.SnackPile.SubtractOne();
-                MoneyInside += MoneyInTransaction;
-                MoneyInTransaction = None;
+                throw new InvalidOperationException(reason);
             }
+            
+            Slot slot = GetSlot(position);
+            slot.SnackPile = slot.SnackPile.SubtractOne();
+            MoneyInTransaction = 0;
+            MoneyInside -= change;
+            return change;
         }
 
-        public virtual bool CanBuySnack(int position, Money money, out string reason)
+        public virtual bool CanBuySnack(int position, out Money change, out string reason)
         {
             reason = string.Empty;
+            change = Money.None;
             var slot = GetSlot(position);
             if (slot is null)
             {
@@ -70,9 +76,15 @@ namespace DddInPractice.Logic
                 reason = "Slot empty";
                 return false;
             }
-            if (money is null || slot.SnackPile.Price > money.Amount)
+            if (slot.SnackPile.Price > MoneyInTransaction)
             {
                 reason = "Not enough money";
+                return false;
+            }
+            change = MoneyInside.Allocate(MoneyInTransaction);
+            if (change.Amount < MoneyInTransaction - slot.SnackPile.Price)
+            {
+                reason = "Not enough change";
                 return false;
             }
 
@@ -83,6 +95,11 @@ namespace DddInPractice.Logic
         {
             Slot slot = GetSlot(position);
             slot.SnackPile = snackPile;
+        }
+
+        public virtual void LoadMoney(Money money)
+        {
+            MoneyInside += money;
         }
 
         public virtual SnackPile GetSnackPile(int position)
