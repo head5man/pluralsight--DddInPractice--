@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 
 namespace DddInPractice.Logic
@@ -22,10 +23,6 @@ namespace DddInPractice.Logic
         public int OneDollarCount { get; }
         public int FiveDollarCount { get; }
         public int TwentyDollarCount { get; }
-
-        public string Unit => Amount <= 0 ? string.Empty : Amount < 1 ? "¢" : "€";
-
-        public string UnitAmount => Amount <= 0 ? string.Empty : Amount < 1 ? AmountInCents.ToString() : Amount.ToString("0.00");
 
         public int AmountInCents =>
             OneDollarCount * 100 +
@@ -112,7 +109,7 @@ namespace DddInPractice.Logic
 
         public override string ToString()
         {
-            return Amount == 0 ? null : $"{Unit}{UnitAmount}";
+            return Amount == 0 ? null : Amount.ToString("C2", CultureInfo.GetCultureInfo("en-US"));
         }
 
         protected override bool EqualsCore(Money other)

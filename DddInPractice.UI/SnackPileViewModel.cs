@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using DddInPractice.Logic;
@@ -9,7 +10,7 @@ namespace DddInPractice.UI
     {
         private readonly SnackPile _snackPile;
 
-        public string Price => _snackPile.Price.ToString("C2");
+        public string Price => _snackPile.Price.ToString("C2", CultureInfo.GetCultureInfo("en-US"));
         public int Amount => _snackPile.Quantity;
         public int ImageWidth => GetImageWidth(_snackPile.Snack);
         public ImageSource Image => 

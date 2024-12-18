@@ -3,6 +3,7 @@ using DddInPractice.UI.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -31,7 +32,7 @@ namespace DddInPractice.UI
 
         public override string Caption => "Snack Machine";
 
-        public string MoneyInTransaction => (_snackMachine.MoneyInTransaction is 0.00m) ? null : _snackMachine.MoneyInTransaction.ToString("C2");
+        public string MoneyInTransaction => (_snackMachine.MoneyInTransaction is 0.00m) ? null : _snackMachine.MoneyInTransaction.ToString("C2", CultureInfo.GetCultureInfo("en-US"));
 
         public string Message { get => _message; set => SetProperty(ref _message, value); }
 

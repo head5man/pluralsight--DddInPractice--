@@ -134,10 +134,10 @@ namespace DddInPractice.Tests
 
         [Theory]
         [InlineData(0, 0, 0, 0, 0, 0, null)]
-        [InlineData(1, 0, 0, 0, 0, 0, "¢1")]
-        [InlineData(1, 2, 0, 0, 0, 0, "¢21")]
-        [InlineData(1, 2, 3, 0, 0, 0, "¢96")]
-        [InlineData(4, 2, 3, 0, 0, 0, "¢99")]
+        [InlineData(1, 0, 0, 0, 0, 0, "$0.01")]
+        [InlineData(1, 2, 0, 0, 0, 0, "$0.21")]
+        [InlineData(1, 2, 3, 0, 0, 0, "$0.96")]
+        [InlineData(4, 2, 3, 0, 0, 0, "$0.99")]
         public void ToString_less_than_dollar_returns_cents(
             int oneCentCount,
             int tenCentCount,
@@ -153,10 +153,10 @@ namespace DddInPractice.Tests
         }
 
         [Theory]
-        [InlineData(1, 2, 3, 4, 0, 0, 4.96, "$")]
-        [InlineData(1, 2, 3, 4, 5, 0, 29.96, "$")]
-        [InlineData(1, 2, 3, 4, 5, 6, 149.96, "$")]
-        [InlineData(110, 0, 0, 0, 100, 0, 501.10, "$")]
+        [InlineData(1, 2, 3, 4, 0, 0, "$4.96")]
+        [InlineData(1, 2, 3, 4, 5, 0, "$29.96")]
+        [InlineData(1, 2, 3, 4, 5, 6, "$149.96")]
+        [InlineData(110, 0, 0, 0, 100, 0, "$501.10")]
         public void ToString_more_than_dollar_returns_dollars(
             int oneCentCount,
             int tenCentCount,
@@ -164,8 +164,7 @@ namespace DddInPractice.Tests
             int oneDollarCount,
             int fiveDollarCount,
             int twentyDollarCount,
-            double amount,
-            string unit)
+            string expected)
         {
             Money money = new Money(
                 oneCentCount,
@@ -175,8 +174,6 @@ namespace DddInPractice.Tests
                 fiveDollarCount,
                 twentyDollarCount);
 
-            // keeping the tests from failing due to localization
-            var expected = $"{unit}{amount:0.00}";
             money.ToString().Should().Be(expected);
         }
     }
