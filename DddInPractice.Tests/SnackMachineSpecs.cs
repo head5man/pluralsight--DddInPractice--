@@ -119,7 +119,7 @@ namespace DddInPractice.Tests
         public void BuySnack_trades_inserted_money_for_a_snack()
         {
             var snackMachine = new SnackMachine();
-            snackMachine.LoadSnacks(1, new SnackPile(new Snack("Some snack"), 10, 1m));
+            snackMachine.LoadSnacks(1, new SnackPile(Snack.Chocolate, 10, 1m));
             snackMachine.InsertMoney(Dollar);
             
             snackMachine.BuySnack(1);
@@ -143,7 +143,7 @@ namespace DddInPractice.Tests
         public void Cannot_make_purchase_when_there_is_not_enough_money()
         {
             var snackMachine = new SnackMachine();
-            snackMachine.LoadSnacks(1, new SnackPile(new Snack("Some snack"), 10, 2m));
+            snackMachine.LoadSnacks(1, new SnackPile(Snack.Soda, 10, 2m));
             snackMachine.InsertMoney(Dollar);
 
             Action action = () => snackMachine.BuySnack(1);
@@ -178,7 +178,7 @@ namespace DddInPractice.Tests
             Money expected)
         {
             var snackMachine = new SnackMachine();
-            snackMachine.LoadSnacks(1, new SnackPile(new Snack("Some snack"), 10, price.Amount));
+            snackMachine.LoadSnacks(1, new SnackPile(Snack.Gum, 10, price.Amount));
             snackMachine.LoadMoney(loaded);
             snackMachine.InsertManyMoney(inserted);
 
