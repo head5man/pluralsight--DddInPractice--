@@ -136,7 +136,21 @@ namespace DddInPractice.Logic
             }
         }
 
-        public Money Allocate(decimal allocate, Money money = null, int iteration = 0)
+        public bool CanAllocate(decimal amount)
+        {
+            Money money = AllocateCore(amount);
+            return money.Amount == amount;
+        }
+
+        public Money Allocate(decimal amount)
+        {
+            if (!CanAllocate(amount))
+                throw new InvalidOperationException();
+
+            return AllocateCore(amount);
+        }
+
+        private Money AllocateCore(decimal allocate, Money money = null, int iteration = 0)
         {
             var amount = allocate;
             List<Money> iterations = null;
@@ -244,7 +258,7 @@ namespace DddInPractice.Logic
             {
                 Money money = moneyKind * i;
                 var remaining = amount - money.Amount;
-                money += Allocate(remaining, None, iteration + 1);
+                money += AllocateCore(remaining, None, iteration + 1);
                 if (money.Amount == amount)
                 {
                     return money;

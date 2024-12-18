@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DddInPractice.Logic;
 
@@ -177,10 +178,9 @@ namespace DddInPractice.Tests
             snackMachine.LoadMoney(loaded);
             snackMachine.InsertManyMoney(inserted);
 
-            var change = snackMachine.BuySnack(1);
-
-            change.Should().Be(expected);
-            snackMachine.MoneyInTransaction.Should().Be(inserted.Amount - price.Amount - change.Amount);
+            snackMachine.BuySnack(1);
+            snackMachine.MoneyInside.Should().Be(inserted + loaded - expected);
+            snackMachine.MoneyInTransaction.Should().Be(0.00m);
         }
 
         [Fact]

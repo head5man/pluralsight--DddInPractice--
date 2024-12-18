@@ -67,14 +67,17 @@ namespace DddInPractice.UI
         {
             if (obj is string str && int.TryParse(str, out int position))
             {
-                if (_snackMachine.CanBuySnack(position, out var change, out var reason) is false)
+                if (_snackMachine.CanBuySnack(position, out var reason) is false)
                 {
                     NotifyClient(reason);
                     return;
                 }
 
+                var change = _snackMachine.CalculateChange(position);
                 _snackMachine.BuySnack(position);
-                NotifyClient($"Bought a snack{(change != Money.None ? $"{Environment.NewLine}Returned {change}" : string.Empty)}");
+                var changeMsg = change != Money.None ? Environment.NewLine + "Returned change " + change : string.Empty;
+                var msg = "Bought a snack" + changeMsg;
+                NotifyClient(msg);
                 Notify(nameof(Piles));
                 SaveSnackMachine();
             }

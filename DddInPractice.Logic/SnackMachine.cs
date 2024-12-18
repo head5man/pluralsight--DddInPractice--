@@ -47,24 +47,23 @@ namespace DddInPractice.Logic
             return money;
         }
 
-        public virtual Money BuySnack(int position)
+        public virtual void BuySnack(int position)
         {
-            if (CanBuySnack(position, out Money change, out string reason) is false)
+            if (CanBuySnack(position, out string reason) is false)
             {
                 throw new InvalidOperationException(reason);
             }
-            
+
+            var change = CalculateChange(position);
             Slot slot = GetSlot(position);
             slot.SnackPile = slot.SnackPile.SubtractOne();
-            MoneyInTransaction = 0;
-            MoneyInside -= change;
-            return change;
+            MoneyInTransaction -= slot.SnackPile.Price;
+            ReturnChange(change);
         }
 
-        public virtual bool CanBuySnack(int position, out Money change, out string reason)
+        public virtual bool CanBuySnack(int position, out string reason)
         {
             reason = string.Empty;
-            change = Money.None;
             var slot = GetSlot(position);
             if (slot is null)
             {
@@ -81,14 +80,27 @@ namespace DddInPractice.Logic
                 reason = "Not enough money";
                 return false;
             }
-            change = MoneyInside.Allocate(MoneyInTransaction - slot.SnackPile.Price);
-            if (change.Amount != MoneyInTransaction - slot.SnackPile.Price)
+
+            var amount = MoneyInTransaction - slot.SnackPile.Price;
+            if (MoneyInside.CanAllocate(amount) is false)
             {
                 reason = "Not enough change";
                 return false;
             }
 
             return true;
+        }
+
+        public virtual Money CalculateChange(int position)
+        {
+            Money money = Money.None;
+            var slot = GetSlot(position);
+            var amount = MoneyInTransaction - slot.SnackPile.Price;
+            if (MoneyInside.CanAllocate(amount))
+            {
+                money = MoneyInside.Allocate(amount);
+            }
+            return money;
         }
 
         public virtual void LoadSnacks(int position, SnackPile snackPile)
@@ -116,6 +128,12 @@ namespace DddInPractice.Logic
         private Slot GetSlot(int position) 
         {
             return Slots.Single(s => s.Position == position);
+        }
+
+        private void ReturnChange(Money changeDue)
+        {
+            MoneyInTransaction -= changeDue.Amount;
+            MoneyInside -= changeDue;
         }
     }
 }
