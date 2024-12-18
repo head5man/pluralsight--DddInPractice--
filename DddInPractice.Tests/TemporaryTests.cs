@@ -1,4 +1,5 @@
 ﻿using DddInPractice.Logic;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Navigation;
 using NHibernate;
 using System;
@@ -18,11 +19,15 @@ namespace DddInPractice.Tests
             SessionFactory.Init(@"Server=(localdb)\MSSQLLocalDB;Database=DddInPractice;Trusted_Connection=true");
             //SessionFactory.Init(@"Server=.;Database=DddInPractice;Trusted_Connection=true");
 
-            using (ISession session = SessionFactory.OpenSession())
-            {
-                long id = 1;
-                var snackMachine = session.Get<SnackMachine>(id);
-            }
+            var repository = new SnackMachineRepository();
+            var snackMachine = repository.GetById(1);
+            snackMachine.Id.Should().Be(1);
+            snackMachine.InsertManyMoney(Money.Dollar * 3);
+            var initial = snackMachine.GetSnackPile(1).Quantity;
+            snackMachine.BuySnack(1);
+            repository.Save(snackMachine);
+            snackMachine = repository.GetById(1);
+            snackMachine.GetSnackPile(1).Quantity.Should().Be(initial - 1);
         }
     }
 }

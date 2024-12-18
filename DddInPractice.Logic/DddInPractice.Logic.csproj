@@ -79,10 +79,12 @@
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="Initializer.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="SessionFactory.cs" />
     <Compile Include="Slot.cs" />
     <Compile Include="Snack.cs" />
     <Compile Include="SnackMachineMap.cs" />
+    <Compile Include="SnackMachineRepository.cs" />
     <Compile Include="SnackPile.cs" />
     <Compile Include="ValueObject.cs" />
     <Compile Include="Entity.cs" />
