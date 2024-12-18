@@ -13,7 +13,7 @@ namespace DddInPractice.Tests
 {
     public class TemporaryTests
     {
-        [Fact]
+        [Fact(Skip = "Temporary testing")]
         public void Test()
         {
             SessionFactory.Init(@"Server=(localdb)\MSSQLLocalDB;Database=DddInPractice;Trusted_Connection=true");
