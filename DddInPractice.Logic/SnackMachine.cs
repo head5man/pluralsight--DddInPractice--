@@ -108,6 +108,11 @@ namespace DddInPractice.Logic
             return slot.SnackPile;
         }
 
+        public virtual IReadOnlyList<SnackPile> GetAllSnackPiles()
+        {
+            return Slots.Select(s => s.SnackPile).ToList();
+        }
+
         private Slot GetSlot(int position) 
         {
             return Slots.Single(s => s.Position == position);

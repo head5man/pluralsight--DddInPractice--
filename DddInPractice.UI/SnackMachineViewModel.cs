@@ -1,7 +1,9 @@
 ﻿using DddInPractice.Logic;
 using DddInPractice.UI.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -24,16 +26,18 @@ namespace DddInPractice.UI
             InsertFiveDollarCommand = new Command(() => InsertMoney(Money.FiveDollar));
             InsertTwentyDollarCommand = new Command(() => InsertMoney(Money.TwentyDollar));
             ReturnMoneyCommand = new Command(() => ReturnMoney());
-            BuySnackCommand = new Command(() => BuySnack(1));
+            BuySnackCommand = new Command<object>((pos) => BuySnack(pos));
         }
 
         public override string Caption => "Snack Machine";
 
-        public decimal MoneyInTransaction => _snackMachine.MoneyInTransaction;
+        public string MoneyInTransaction => (_snackMachine.MoneyInTransaction is 0.00m) ? null : _snackMachine.MoneyInTransaction.ToString("C2");
 
         public string Message { get => _message; set => SetProperty(ref _message, value); }
 
         public Money MoneyInside => _snackMachine.MoneyInside;
+
+        public IReadOnlyList<SnackPileViewModel> Piles => _snackMachine.GetAllSnackPiles().Select(p => new SnackPileViewModel(p)).ToList();
 
         public Command InsertCentCommand { get; }
 
@@ -49,7 +53,7 @@ namespace DddInPractice.UI
 
         public Command ReturnMoneyCommand { get; }
 
-        public Command BuySnackCommand { get; }
+        public Command<object> BuySnackCommand { get; }
 
         private void InsertMoney(Money c)
         {
@@ -58,22 +62,26 @@ namespace DddInPractice.UI
             SaveSnackMachine();
         }
 
-        private void BuySnack(int position)
+        private void BuySnack(object obj)
         {
-            if (_snackMachine.CanBuySnack(position, out var change, out var reason) is false)
+            if (obj is string str && int.TryParse(str, out int position))
             {
-                NotifyClient(reason);
-                return;
-            }
+                if (_snackMachine.CanBuySnack(position, out var change, out var reason) is false)
+                {
+                    NotifyClient(reason);
+                    return;
+                }
 
-            _snackMachine.BuySnack(position);
-            NotifyClient($"Bought a snack{(change != Money.None ? $"{Environment.NewLine}Returned {change}" : string.Empty)}");
-            SaveSnackMachine();
+                _snackMachine.BuySnack(position);
+                NotifyClient($"Bought a snack{(change != Money.None ? $"{Environment.NewLine}Returned {change}" : string.Empty)}");
+                Notify(nameof(Piles));
+                SaveSnackMachine();
+            }
         }
 
         private void ReturnMoney()
         {
-            if (MoneyInTransaction <= 0)
+            if (_snackMachine.MoneyInTransaction <= 0)
             {
                 NotifyClient("No money inserted");
                 return;

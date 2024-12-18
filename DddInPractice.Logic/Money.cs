@@ -23,7 +23,7 @@ namespace DddInPractice.Logic
         public int FiveDollarCount { get; }
         public int TwentyDollarCount { get; }
 
-        public string Unit => Amount <= 0 ? string.Empty : Amount < 1 ? "¢" : "$";
+        public string Unit => Amount <= 0 ? string.Empty : Amount < 1 ? "¢" : "€";
 
         public string UnitAmount => Amount <= 0 ? string.Empty : Amount < 1 ? AmountInCents.ToString() : Amount.ToString("0.00");
 

@@ -1,12 +1,12 @@
-﻿namespace DddInPractice.UI.Common
+﻿using System.Windows;
+
+namespace DddInPractice.UI.Common
 {
     public partial class CustomWindow
     {
         public CustomWindow(ViewModel viewModel)
         {
             InitializeComponent();
-
-            //Owner = Application.Current.MainWindow;
             DataContext = viewModel;
         }
     }
