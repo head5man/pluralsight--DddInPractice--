@@ -81,8 +81,8 @@ namespace DddInPractice.Logic
                 reason = "Not enough money";
                 return false;
             }
-            change = MoneyInside.Allocate(MoneyInTransaction);
-            if (change.Amount < MoneyInTransaction - slot.SnackPile.Price)
+            change = MoneyInside.Allocate(MoneyInTransaction - slot.SnackPile.Price);
+            if (change.Amount != MoneyInTransaction - slot.SnackPile.Price)
             {
                 reason = "Not enough change";
                 return false;
