@@ -10,12 +10,13 @@ namespace DddInPractice.UI
     public class SnackMachineViewModel : ViewModel
     {
         private readonly SnackMachine _snackMachine;
-
+        private readonly SnackMachineRepository _repository;
         private string _message = "";
 
-        public SnackMachineViewModel(SnackMachine snackMachine)
+        public SnackMachineViewModel(SnackMachine snackMachine, SnackMachineRepository repository)
         {
             _snackMachine = snackMachine;
+            _repository = repository;
             InsertCentCommand = new Command(() => InsertMoney(Money.Cent));
             InsertDimeCommand = new Command(() => InsertMoney(Money.TenCent));
             InsertQuarterCommand = new Command(() => InsertMoney(Money.Quarter));
@@ -92,12 +93,7 @@ namespace DddInPractice.UI
 
         private void SaveSnackMachine()
         {
-            using (var session = SessionFactory.OpenSession())
-            using (var transaction = session.BeginTransaction())
-            {
-                session.SaveOrUpdate(_snackMachine);
-                transaction.Commit();
-            }
+            _repository.Save(_snackMachine);
         }
     }
 }
