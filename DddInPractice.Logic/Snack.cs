@@ -19,6 +19,7 @@ namespace DddInPractice.Logic
 
     public class Snack : AggregateRoot
     {
+        public static readonly Snack None = new Snack(0);
         public static readonly Snack Chocolate = new Snack(1);
         public static readonly Snack Soda = new Snack(2);
         public static Snack Gum = new Snack(3);

@@ -28,5 +28,14 @@ namespace DddInPractice.Logic.Integration.Tests
             snack3.Should().Be(Snack.Gum);
             snack3.Name.Should().Be(Snack.Gum.Name);
         }
+
+        [Fact]
+        public void None_should_not_exist_in_the_database()
+        {
+            SessionFactory.Init(@"Server=(localdb)\MSSQLLocalDB;Database=DddInPractice;Trusted_Connection=true");
+
+            var repository = new SnackRepository();
+            repository.GetById(0).Should().BeNull();
+        }
     }
 }
