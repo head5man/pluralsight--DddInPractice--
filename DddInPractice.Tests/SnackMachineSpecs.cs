@@ -38,11 +38,6 @@ namespace DddInPractice.Tests
                 Dollar,
                 None},
             new object[] {
-                Dollar,
-                Dollar,
-                new Money(quarterCount: 2),
-                None},
-            new object[] {
                 new Money(fiveDollarCount: 1, oneDollarCount: 4, quarterCount: 3, tenCentCount: 3),
                 new Money(fiveDollarCount: 1, oneDollarCount: 1),
                 new Money(quarterCount: 2, tenCentCount: 4, oneCentCount: 5),
@@ -186,6 +181,19 @@ namespace DddInPractice.Tests
 
             change.Should().Be(expected);
             snackMachine.MoneyInTransaction.Should().Be(inserted.Amount - price.Amount - change.Amount);
+        }
+
+        [Fact]
+        public void Throws_exception_when_not_enough_change_to_buy_snack()
+        {
+            var loaded = Dollar;
+            var insert = Dollar;
+            var price = new Money(quarterCount: 2);
+            var expected = None;
+
+            Action action = () => After_purchase_change_is_returned(loaded, insert, price, expected);
+
+            action.ShouldThrow<InvalidOperationException>();
         }
     }
 }
