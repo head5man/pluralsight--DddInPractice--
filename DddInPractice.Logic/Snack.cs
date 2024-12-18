@@ -31,6 +31,7 @@ namespace DddInPractice.Logic
 
         private Snack(long id, [CallerMemberName]string name = null)
         {
+            Id = id;
             Name = name;
         }
     }
