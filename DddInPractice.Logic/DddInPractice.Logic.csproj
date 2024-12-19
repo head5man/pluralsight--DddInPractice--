@@ -77,20 +77,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateRoot.cs" />
-    <Compile Include="Initializer.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="SessionFactory.cs" />
-    <Compile Include="Slot.cs" />
-    <Compile Include="Snack.cs" />
-    <Compile Include="SnackMachineMap.cs" />
-    <Compile Include="Repos\SnackMachineRepository.cs" />
-    <Compile Include="SnackPile.cs" />
-    <Compile Include="Repos\SnackRepository.cs" />
-    <Compile Include="ValueObject.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="Money.cs" />
-    <Compile Include="SnackMachine.cs" />
+    <Compile Include="Common\AggregateRoot.cs" />
+    <Compile Include="Utils\Initializer.cs" />
+    <Compile Include="Common\Repository.cs" />
+    <Compile Include="Utils\SessionFactory.cs" />
+    <Compile Include="SnackMachine\Slot.cs" />
+    <Compile Include="SnackMachine\Snack.cs" />
+    <Compile Include="SnackMachine\SnackMachineMap.cs" />
+    <Compile Include="SnackMachine\SnackMachineRepository.cs" />
+    <Compile Include="SnackMachine\SnackPile.cs" />
+    <Compile Include="SnackMachine\SnackRepository.cs" />
+    <Compile Include="Common\ValueObject.cs" />
+    <Compile Include="Common\Entity.cs" />
+    <Compile Include="SharedKernel\Money.cs" />
+    <Compile Include="SnackMachine\SnackMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

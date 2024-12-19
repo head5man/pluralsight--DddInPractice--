@@ -74,8 +74,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="SnackMachineViewModel.cs" />
-    <Compile Include="SnackPileViewModel.cs" />
+    <Compile Include="SnackMachine\SnackMachineViewModel.cs" />
+    <Compile Include="SnackMachine\SnackPileViewModel.cs" />
     <Compile Include="Utils\DialogService.cs" />
     <Page Include="Common\CustomWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -104,7 +104,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ViewModel.cs" />
-    <Page Include="SnackMachineViewModel.xaml">
+    <Page Include="SnackMachine\SnackMachineViewModel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
