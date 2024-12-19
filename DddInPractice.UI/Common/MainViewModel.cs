@@ -17,7 +17,7 @@ namespace DddInPractice.UI.Common
         {
             var atmRepo = new AtmRepository();
             var atm = atmRepo.GetById(1);
-            var atmViewModel = new AtmViewModel(atm);
+            var atmViewModel = new AtmViewModel(atm, atmRepo);
             _dialogService.ShowDialog(atmViewModel);
         }
 

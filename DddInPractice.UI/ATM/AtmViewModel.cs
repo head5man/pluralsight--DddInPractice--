@@ -12,11 +12,13 @@ namespace DddInPractice.UI.ATM
     public class AtmViewModel : ViewModel
     {
         private Atm _atm;
+        private readonly AtmRepository _repo;
         private string _message;
 
-        public AtmViewModel(Atm atm)
+        public AtmViewModel(Atm atm, AtmRepository repo)
         {
             _atm = atm;
+            _repo = repo;
             WithdrawCommand = new Command<decimal>(Withdraw, x => x > 0);
         }
 
@@ -39,6 +41,7 @@ namespace DddInPractice.UI.ATM
             }
 
             _atm.Withdraw(amount);
+            _repo.Save(_atm);
             NotifyClient($"Withdrew amount {amount:c2}");
         }
 
