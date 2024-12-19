@@ -36,7 +36,7 @@ namespace DddInPractice.Logic.ATM
             MoneyInside += money;
         }
 
-        public virtual bool CanWithdrawMoney(decimal amount, out string error)
+        public virtual bool CanWithdraw(decimal amount, out string error)
         {
             error = string.Empty;
             if (amount <= 0m)
@@ -59,9 +59,9 @@ namespace DddInPractice.Logic.ATM
             return true;
         }
 
-        public virtual void WithdrawMoney(decimal amount)
+        public virtual void Withdraw(decimal amount)
         {
-            if (CanWithdrawMoney(amount, out string error) is false)
+            if (CanWithdraw(amount, out string error) is false)
             {
                 throw new InvalidOperationException(error);
             }

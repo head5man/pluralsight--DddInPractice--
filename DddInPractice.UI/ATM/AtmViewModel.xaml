@@ -57,7 +57,7 @@
             <StackPanel Orientation="Vertical" Margin="50 50 50 0">
                 <xctk:DecimalUpDown FormatString="C2" Value="0.01" Increment="0.01" Minimum="0.01" Maximum="5000"
                                     x:Name="AmountToTake" Padding="10" FontSize="20" FontWeight="Bold" TextAlignment="Center" />
-                <Button FontSize="18" Content="Take money" Command="{Binding TakeMoneyCommand}" Padding="10" Margin="0 20 0 0"
+                <Button FontSize="18" Content="Take money" Command="{Binding WithdrawCommand}" Padding="10" Margin="0 20 0 0"
                         CommandParameter="{Binding ElementName=AmountToTake, Path=Value}" />
                 <Label Content="{Binding Message}" HorizontalAlignment="Center" FontSize="16" />
             </StackPanel>

@@ -17,7 +17,7 @@ namespace DddInPractice.Logic.ATM.Tests
             var atm = new Atm();
             atm.LoadMoney(Money.Dollar);
 
-            atm.WithdrawMoney(1m);
+            atm.Withdraw(1m);
 
             atm.MoneyInside.Amount.Should().Be(0m);
             atm.MoneyCharged.Should().Be(1.01m);
@@ -29,7 +29,7 @@ namespace DddInPractice.Logic.ATM.Tests
             var atm = new Atm();
             atm.LoadMoney(Money.Dollar);
 
-            Action action = () => atm.WithdrawMoney(2m);
+            Action action = () => atm.Withdraw(2m);
 
             action.ShouldThrow<InvalidOperationException>();
         }
@@ -40,7 +40,7 @@ namespace DddInPractice.Logic.ATM.Tests
             var atm = new Atm();
             atm.LoadMoney(Money.Cent);
 
-            atm.WithdrawMoney(Money.Cent.Amount);
+            atm.Withdraw(Money.Cent.Amount);
 
             atm.MoneyCharged.ShouldBeEquivalentTo(0.02m);
         }
@@ -52,7 +52,7 @@ namespace DddInPractice.Logic.ATM.Tests
             atm.LoadMoney(Money.Dollar);
             atm.LoadMoney(Money.TenCent);
 
-            atm.WithdrawMoney(1.1m);
+            atm.Withdraw(1.1m);
 
             atm.MoneyInside.Amount.Should().Be(0m);
             atm.MoneyCharged.Should().Be(1.12m);
