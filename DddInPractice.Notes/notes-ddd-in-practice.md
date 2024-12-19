@@ -17,3 +17,28 @@ Most aggregates consist of 1 or 2 entities. Usually 3 entities per aggregate is 
 Is a pattern encapsulating all database communication.
 
 For a domain model there should be a repository for each aggrate. And a repository should work with aggregate roots only.
+
+#### Bounded Contexts
+
+* Separaration of the model into smaller ones.
+* Boundary for the ubiquitous language.
+* Span across all layers in the onion architecture.
+* Explicit relationships between different bounded contexts.
+
+```mermaid
+C4Context
+    title System Context diagram for 
+    Component(shared_kernel, "Shared Kernel", "money")
+    
+    Boundary(context1, "Bounded Context")
+    {
+        Component(atm, "ATM")
+    }
+
+    Boundary(context2, "Bounded Context")
+    {
+        Component(sm, "SnackMachine")
+    }
+    Rel(atm, shared_kernel, "")
+    Rel(sm, shared_kernel, "")
+```

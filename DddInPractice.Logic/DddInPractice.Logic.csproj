@@ -77,6 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ATM\Atm.cs" />
+    <Compile Include="ATM\AtmRepository.cs" />
     <Compile Include="Common\AggregateRoot.cs" />
     <Compile Include="Utils\Initializer.cs" />
     <Compile Include="Common\Repository.cs" />
@@ -109,6 +111,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
