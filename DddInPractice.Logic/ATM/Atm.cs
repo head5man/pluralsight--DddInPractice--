@@ -69,8 +69,13 @@ namespace DddInPractice.Logic.ATM
             var withdrawal = MoneyInside.Allocate(amount);
             MoneyInside -= withdrawal;
 
-            decimal amountWithCommission = amount + CalculateCommission(amount);
+            decimal amountWithCommission = CalculateAmountWithCommission(amount);
             MoneyCharged += amountWithCommission;
+        }
+
+        public virtual decimal CalculateAmountWithCommission(decimal amount)
+        {
+            return amount + CalculateCommission(amount);
         }
 
         private decimal CalculateCommission(decimal amount)
