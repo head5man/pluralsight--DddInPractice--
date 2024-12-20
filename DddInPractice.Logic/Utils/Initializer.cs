@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DddInPractice.Logic.Management;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace DddInPractice.Logic
         public static void Init(string connectionString)
         {
             SessionFactory.Init(connectionString);
+            HeadOfficeInstance.Init();
         }
     }
 }

@@ -81,6 +81,9 @@
     <Compile Include="ATM\AtmRepository.cs" />
     <Compile Include="ATM\PaymentGateway.cs" />
     <Compile Include="Common\AggregateRoot.cs" />
+    <Compile Include="Management\HeadOffice.cs" />
+    <Compile Include="Management\HeadOfficeInstance.cs" />
+    <Compile Include="Management\HeadOfficeRepository.cs" />
     <Compile Include="Utils\Initializer.cs" />
     <Compile Include="Common\Repository.cs" />
     <Compile Include="Utils\SessionFactory.cs" />
