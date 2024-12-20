@@ -90,6 +90,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ATM\AtmViewModel.cs" />
+    <Compile Include="Management\DashboardViewModel.cs" />
     <Compile Include="SnackMachine\SnackMachineViewModel.cs" />
     <Compile Include="SnackMachine\SnackPileViewModel.cs" />
     <Compile Include="Utils\DialogService.cs" />
@@ -124,6 +125,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\ViewModel.cs" />
+    <Page Include="Management\DashboardViewModel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SnackMachine\SnackMachineViewModel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

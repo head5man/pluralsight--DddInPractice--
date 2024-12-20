@@ -16,62 +16,68 @@ namespace DddInPractice.Logic.Utils
     {
         public void OnPostDelete(PostDeleteEvent ev)
         {
-            DispatchEvents(ev.Entity as AggregateRoot);
+            DispatchEvents(ev.Entity);
         }
 
         public Task OnPostDeleteAsync(PostDeleteEvent ev, CancellationToken token)
         {
-            return DispatchEventsAsync(ev.Entity as AggregateRoot, token);
+            return DispatchEventsAsync(ev.Entity, token);
         }
 
         public void OnPostInsert(PostInsertEvent ev)
         {
-            DispatchEvents(ev.Entity as AggregateRoot);
+            DispatchEvents(ev.Entity);
         }
 
         public Task OnPostInsertAsync(PostInsertEvent ev, CancellationToken token)
         {
-            return DispatchEventsAsync(ev.Entity as AggregateRoot, token);
+            return DispatchEventsAsync(ev.Entity, token);
         }
 
         public void OnPostUpdate(PostUpdateEvent ev)
         {
-            DispatchEvents(ev.Entity as AggregateRoot);
+            DispatchEvents(ev.Entity);
         }
 
         public Task OnPostUpdateAsync(PostUpdateEvent ev, CancellationToken token)
         {
-            return DispatchEventsAsync(ev.Entity as AggregateRoot, token);
+            return DispatchEventsAsync(ev.Entity, token);
         }
 
         public void OnPostUpdateCollection(PostCollectionUpdateEvent ev)
         {
-            DispatchEvents(ev.AffectedOwnerOrNull as AggregateRoot);
+            DispatchEvents(ev.AffectedOwnerOrNull);
         }
 
         public Task OnPostUpdateCollectionAsync(PostCollectionUpdateEvent ev, CancellationToken token)
         {
-            return DispatchEventsAsync(ev.AffectedOwnerOrNull as AggregateRoot, token);
+            return DispatchEventsAsync(ev.AffectedOwnerOrNull, token);
         }
 
-        private async Task DispatchEventsAsync(AggregateRoot aggregateRoot, CancellationToken token)
+        private async Task DispatchEventsAsync(object entity, CancellationToken token)
         {
-            foreach (IDomainEvent @event in aggregateRoot?.DomainEvents)
+            if (entity is AggregateRoot root)
             {
-                await Task.Run(() => DomainEvents.Dispatch(@event), token);
-            }
+                foreach (IDomainEvent @event in root.DomainEvents)
+                {
+                    await Task.Run(() => DomainEvents.Dispatch(@event), token);
+                }
 
-            aggregateRoot?.ClearEvents();
+                root.ClearEvents();
+            }
         }
 
-        private void DispatchEvents(AggregateRoot aggregateRoot)
+        private void DispatchEvents(object entity)
         {
-            foreach (IDomainEvent @event in aggregateRoot?.DomainEvents)
+            if (entity is AggregateRoot root)
             {
-                DomainEvents.Dispatch(@event);
-            }
+                foreach (IDomainEvent @event in root.DomainEvents)
+                {
+                    DomainEvents.Dispatch(@event);
+                }
 
-            aggregateRoot?.ClearEvents();
+                root.ClearEvents();
+            }
         }
     }
 }

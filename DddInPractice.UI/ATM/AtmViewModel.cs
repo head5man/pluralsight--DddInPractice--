@@ -16,11 +16,11 @@ namespace DddInPractice.UI.ATM
         private readonly AtmRepository _repo;
         private string _message;
 
-        public AtmViewModel(Atm atm, AtmRepository repo)
+        public AtmViewModel(Atm atm)
         {
             _paymentGateway = new PaymentGateway();
             _atm = atm;
-            _repo = repo;
+            _repo = new AtmRepository();
             WithdrawCommand = new Command<decimal>(Withdraw, x => x > 0);
         }
 

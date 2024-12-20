@@ -1,25 +1,23 @@
-﻿using DddInPractice.Logic;
-using DddInPractice.UI.Common;
+﻿using DddInPractice.UI.Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+using DddInPractice.Logic.SnackMachine;
+using Money = DddInPractice.Logic.Money;
 
-namespace DddInPractice.UI
+namespace DddInPractice.UI.SnackMachine
 {
     public class SnackMachineViewModel : ViewModel
     {
-        private readonly SnackMachine _snackMachine;
+        private readonly Logic.SnackMachine.SnackMachine _snackMachine;
         private readonly SnackMachineRepository _repository;
         private string _message = "";
 
-        public SnackMachineViewModel(SnackMachine snackMachine, SnackMachineRepository repository)
+        public SnackMachineViewModel(Logic.SnackMachine.SnackMachine snackMachine)
         {
             _snackMachine = snackMachine;
-            _repository = repository;
+            _repository = new SnackMachineRepository();
             InsertCentCommand = new Command(() => InsertMoney(Money.Cent));
             InsertDimeCommand = new Command(() => InsertMoney(Money.TenCent));
             InsertQuarterCommand = new Command(() => InsertMoney(Money.Quarter));

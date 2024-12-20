@@ -11,7 +11,7 @@ namespace DddInPractice.Logic.Common
 {
     public class DomainEvents
     {
-        private static List<Type> _handlers = new List<Type>();
+        private static List<Type> _handlers;
 
         public static void Init()
         {
@@ -24,7 +24,7 @@ namespace DddInPractice.Logic.Common
 
         public static void Dispatch(IDomainEvent domainEvent)
         {
-            foreach (Type handlerType in _handlers.Where(x => domainEvent.GetType().IsAssignableFrom(x)))
+            foreach (Type handlerType in _handlers)
             {
                 bool canHandleEvent = handlerType.GetInterfaces()
                     .Any(x => x.IsGenericType
@@ -34,7 +34,7 @@ namespace DddInPractice.Logic.Common
                 if (canHandleEvent)
                 {
                     dynamic handler = Activator.CreateInstance(handlerType);
-                    handler.Handle(domainEvent);
+                    handler.Handle((dynamic)domainEvent);
                 }
 
             }

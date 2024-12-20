@@ -6,7 +6,7 @@ using System.Linq;
 
 using static DddInPractice.Logic.Money;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.SnackMachine
 {
     public class SnackMachine : AggregateRoot
     {
@@ -134,6 +134,13 @@ namespace DddInPractice.Logic
         {
             MoneyInTransaction -= changeDue.Amount;
             MoneyInside -= changeDue;
+        }
+
+        public virtual Money UnloadMoney()
+        {
+            var unloaded = MoneyInside;
+            MoneyInside = Money.None;
+            return unloaded;
         }
     }
 }

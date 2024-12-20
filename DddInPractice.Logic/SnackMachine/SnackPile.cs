@@ -1,6 +1,6 @@
 using System;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.SnackMachine
 {
     public sealed class SnackPile : ValueObject<SnackPile>
     {

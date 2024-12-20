@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DddInPractice.Logic
+namespace DddInPractice.Logic.SnackMachine
 {
     public class SlotMap : ClassMap<Slot>
     {

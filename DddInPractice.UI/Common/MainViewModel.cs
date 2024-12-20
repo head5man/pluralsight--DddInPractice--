@@ -1,7 +1,4 @@
-﻿using DddInPractice.Logic;
-using DddInPractice.Logic.ATM;
-using DddInPractice.UI.ATM;
-using System.Windows;
+﻿using DddInPractice.UI.Management;
 
 namespace DddInPractice.UI.Common
 {
@@ -9,24 +6,9 @@ namespace DddInPractice.UI.Common
     {
         public MainViewModel()
         {
-            //RunSnackMachine();
-            RunATM();
+            Dashboard = new DashboardViewModel();
         }
 
-        private static void RunATM()
-        {
-            var atmRepo = new AtmRepository();
-            var atm = atmRepo.GetById(1);
-            var atmViewModel = new AtmViewModel(atm, atmRepo);
-            _dialogService.ShowDialog(atmViewModel);
-        }
-
-        private static void RunSnackMachine()
-        {
-            var repo = new SnackMachineRepository();
-            SnackMachine sm = repo.GetById(1);
-            var viewModel = new SnackMachineViewModel(sm, repo);
-            _dialogService.ShowDialog(viewModel);
-        }
+        public DashboardViewModel Dashboard { get; }
     }
 }

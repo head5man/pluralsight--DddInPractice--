@@ -1,3 +1,4 @@
+using DddInPractice.Logic.ATM;
 using FluentNHibernate.Mapping;
 using System;
 
@@ -31,6 +32,18 @@ namespace DddInPractice.Logic.Management
         public virtual void ChangeBalance(decimal delta)
         {
             Balance += delta;
+        }
+
+        public virtual void LoadCashToAtm(Atm atm)
+        {
+            atm.LoadMoney(Cash);
+            Cash = Money.None;
+        }
+
+        public virtual void UnloadCashFromSnackMachine(SnackMachine.SnackMachine snackMachine)
+        {
+            Money money = snackMachine.UnloadMoney();
+            Cash += money;
         }
     }
 }

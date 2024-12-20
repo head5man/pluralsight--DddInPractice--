@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATM\Atm.cs" />
+    <Compile Include="ATM\AtmDto.cs" />
     <Compile Include="ATM\AtmRepository.cs" />
     <Compile Include="ATM\BalanceChangedEvent.cs" />
     <Compile Include="ATM\PaymentGateway.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Management\HeadOffice.cs" />
     <Compile Include="Management\HeadOfficeInstance.cs" />
     <Compile Include="Management\HeadOfficeRepository.cs" />
+    <Compile Include="SnackMachine\SnackMachineDto.cs" />
     <Compile Include="Utils\EventListener.cs" />
     <Compile Include="Utils\Initializer.cs" />
     <Compile Include="Common\Repository.cs" />
