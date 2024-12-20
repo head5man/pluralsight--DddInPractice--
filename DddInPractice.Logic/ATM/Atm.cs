@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping;
+﻿using DddInPractice.Logic.Common;
+using FluentNHibernate.Mapping;
 using System;
 
 namespace DddInPractice.Logic.ATM
@@ -71,6 +72,7 @@ namespace DddInPractice.Logic.ATM
 
             decimal amountWithCommission = CalculateAmountWithCommission(amount);
             MoneyCharged += amountWithCommission;
+            DomainEvents.Raise(new BalanceChangedEvent(amountWithCommission));
         }
 
         public virtual decimal CalculateAmountWithCommission(decimal amount)

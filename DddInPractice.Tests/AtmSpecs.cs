@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
+using DddInPractice.Logic.Common;
 
 namespace DddInPractice.Logic.ATM.Tests
 {
@@ -56,6 +57,21 @@ namespace DddInPractice.Logic.ATM.Tests
 
             atm.MoneyInside.Amount.Should().Be(0m);
             atm.MoneyCharged.Should().Be(1.12m);
+        }
+
+        [Fact]
+        public void Withdrawal_raises_an_event()
+        {
+            Initializer.Init(@"Server=(localdb)\MSSQLLocalDB;Database=DddInPractice;Trusted_Connection=true");
+            BalanceChangedEvent @event = null;
+            DomainEvents.Register((BalanceChangedEvent e) => @event = e);
+
+            var atm = new Atm();
+            atm.LoadMoney(Money.Dollar);
+
+            atm.Withdraw(1m);
+            @event.Should().NotBeNull();
+            @event.Delta.Should().Be(1.01m);
         }
     }
 }

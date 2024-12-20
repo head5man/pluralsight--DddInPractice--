@@ -103,7 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ATM\AtmSpecs.cs" />
+    <Compile Include="AtmSpecs.cs" />
     <Compile Include="MoneySpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnackIntegration.cs" />
