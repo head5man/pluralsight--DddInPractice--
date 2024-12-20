@@ -1,11 +1,7 @@
 ﻿using Xunit;
-using DddInPractice.Logic;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
+using DddInPractice.Logic.SnackMachine;
 
 namespace DddInPractice.Logic.Tests
 {
