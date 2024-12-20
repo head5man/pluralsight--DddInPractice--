@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,46 +11,32 @@ namespace DddInPractice.Logic.Common
 {
     public class DomainEvents
     {
-        private static Dictionary<Type, List<Delegate>> _dynamicHandlers = new Dictionary<Type, List<Delegate>>();
-        private static List<Type> _staticHandlers = new List<Type>();
+        private static List<Type> _handlers = new List<Type>();
 
         public static void Init()
         {
-            _dynamicHandlers = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(x => typeof(IDomainEvent).IsAssignableFrom(x) && !x.IsInterface)
-                .ToList()
-                .ToDictionary(x => x, (_) => new List<Delegate>());
-
-            _staticHandlers = Assembly.GetExecutingAssembly()
+            _handlers = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(x => x.GetInterfaces()
                     .Any(y => y.IsGenericType && y.GetGenericTypeDefinition() == typeof(IHandler<>)))
                 .ToList();
         }
 
-        public static void Register<T>(Action<T> eventHandler)
-            where T : IDomainEvent
+        public static void Dispatch(IDomainEvent domainEvent)
         {
-            _dynamicHandlers[typeof(T)].Add(eventHandler);
-        }
-
-        public static void Raise<T>(T domainEvent)
-            where T : IDomainEvent
-        {
-            if (_dynamicHandlers.ContainsKey(domainEvent.GetType()))
+            foreach (Type handlerType in _handlers.Where(x => domainEvent.GetType().IsAssignableFrom(x)))
             {
-                foreach (Delegate handler in _dynamicHandlers[domainEvent.GetType()])
+                bool canHandleEvent = handlerType.GetInterfaces()
+                    .Any(x => x.IsGenericType
+                        && x.GetGenericTypeDefinition() == typeof(IHandler<>)
+                        && x.GenericTypeArguments[0] == domainEvent.GetType());
+                        
+                if (canHandleEvent)
                 {
-                    var action = (Action<T>)handler;
-                    action(domainEvent);
+                    dynamic handler = Activator.CreateInstance(handlerType);
+                    handler.Handle(domainEvent);
                 }
-            }
 
-            foreach (Type handler in _staticHandlers.Where(x => typeof(IHandler<T>).IsAssignableFrom(x)))
-            {
-                IHandler<T> instance = (IHandler<T>)Activator.CreateInstance(handler);
-                instance.Handle(domainEvent);
             }
         }
     }

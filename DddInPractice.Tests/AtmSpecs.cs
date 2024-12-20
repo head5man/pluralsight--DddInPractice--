@@ -62,16 +62,25 @@ namespace DddInPractice.Logic.ATM.Tests
         [Fact]
         public void Withdrawal_raises_an_event()
         {
-            Initializer.Init(@"Server=(localdb)\MSSQLLocalDB;Database=DddInPractice;Trusted_Connection=true");
-            BalanceChangedEvent @event = null;
-            DomainEvents.Register((BalanceChangedEvent e) => @event = e);
-
             var atm = new Atm();
             atm.LoadMoney(Money.Dollar);
 
             atm.Withdraw(1m);
-            @event.Should().NotBeNull();
-            @event.Delta.Should().Be(1.01m);
+
+            atm.ShouldContainBalanceChangedEvent(1.01m);
+        }
+    }
+
+    internal static class AtmExtensions
+    {
+        public static void ShouldContainBalanceChangedEvent(this Atm self, decimal delta)
+        {
+            var domainEvent = self.DomainEvents
+                .OfType<BalanceChangedEvent>()
+                .SingleOrDefault();
+
+            domainEvent.Should().NotBeNull();
+            domainEvent.Delta.Should().Be(delta);
         }
     }
 }

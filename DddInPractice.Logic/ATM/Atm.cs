@@ -72,7 +72,7 @@ namespace DddInPractice.Logic.ATM
 
             decimal amountWithCommission = CalculateAmountWithCommission(amount);
             MoneyCharged += amountWithCommission;
-            DomainEvents.Raise(new BalanceChangedEvent(amountWithCommission));
+            AddDomainEvent(new BalanceChangedEvent(amountWithCommission));
         }
 
         public virtual decimal CalculateAmountWithCommission(decimal amount)
